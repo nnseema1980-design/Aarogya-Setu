@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Reports Analysis - Aarogya Setu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      background: linear-gradient(135deg, #006666 0%, #b8d4d4 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+      z-index: -1;
+      filter: blur(80px);
+    }
+
+    /* Header */
+    .header {
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: #06b6d4;
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(6, 182, 212, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #ffffff;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .page-subtitle {
+      color: #a1a1aa;
+      font-size: 18px;
+      margin-bottom: 50px;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.25));
+      backdrop-filter: blur(20px);
+      border: 2px dashed rgba(0, 102, 102, 0.6);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-section:hover {
+      border-color: #006666;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.45), rgba(0, 102, 102, 0.2));
+    }
+
+    .upload-section.dragover {
+      border-color: #006666;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 102, 102, 0.25));
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .upload-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .upload-desc {
+      color: #a1a1aa;
+      margin-bottom: 30px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .upload-btn {
+      background: linear-gradient(135deg, #006666, #004d4d);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(0, 102, 102, 0.4);
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 102, 102, 0.6);
+    }
+
+    /* Preview Section */
+    .preview-section {
+      display: none;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+
+    .preview-section.active {
+      display: block;
+    }
+
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .file-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .file-info h3 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .file-info p {
+      color: #71717a;
+      font-size: 14px;
+    }
+
+    .analyze-btn {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+      width: 100%;
+    }
+
+    .analyze-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(139, 92, 246, 0.6);
+    }
+
+    .analyze-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Analysis Section */
+    .analysis-section {
+      display: none;
+    }
+
+    .analysis-section.active {
+      display: block;
+    }
+
+    .analyzing {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 60px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(6, 182, 212, 0.2);
+      border-top-color: #06b6d4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results */
+    .results {
+      display: none;
+    }
+
+    .results.active {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .result-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .result-card.red-flag {
+      border-color: rgba(239, 68, 68, 0.5);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+    }
+
+    .result-card.warning {
+      border-color: rgba(251, 191, 36, 0.5);
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+    }
+
+    .result-card.normal {
+      border-color: rgba(34, 197, 94, 0.5);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05));
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .result-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .result-icon.red {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .result-icon.yellow {
+      background: rgba(251, 191, 36, 0.2);
+    }
+
+    .result-icon.green {
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    .result-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .result-content {
+      color: #a1a1aa;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .parameter-list {
+      list-style: none;
+    }
+
+    .parameter-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .parameter-name {
+      font-weight: 600;
+    }
+
+    .parameter-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.high {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .status-badge.low {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .status-badge.normal {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .recommendation-box {
+      background: rgba(6, 182, 212, 0.1);
+      border-left: 3px solid #06b6d4;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .recommendation-box h4 {
+      color: #06b6d4;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .recommendation-box ul {
+      margin-left: 20px;
+      color: #a1a1aa;
+    }
+
+    .recommendation-box li {
+      margin-bottom: 8px;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      color: white;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #06b6d4;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .results.active {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-area">
+      <img src="logo.jpeg" alt="Aarogya Setu" class="logo-img">
+      <span class="logo-text">Lab Reports AI</span>
+    </div>
+    <button class="back-btn" onclick="window.location.href='patient-dashboard.html'">← Back to Dashboard</button>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1 class="page-title">📋 Lab Report Analysis</h1>
+    <p class="page-subtitle">Upload your lab reports and get instant AI-powered analysis with red flag detection</p>
+
+    <!-- Upload Section -->
+    <div class="upload-section" id="uploadSection" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📄</div>
+      <h2 class="upload-title">Upload Lab Report</h2>
+      <p class="upload-desc">Drag & drop your report here or click to browse<br>Supports: PDF, JPG, PNG (Max 10MB)</p>
+      <input type="file" id="fileInput" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
+      <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+        Choose File
+      </button>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="preview-section" id="previewSection">
+      <div class="file-preview">
+        <div class="file-icon">📄</div>
+        <div class="file-info">
+          <h3 id="fileName">Report.pdf</h3>
+          <p id="fileSize">2.5 MB</p>
+        </div>
+      </div>
+      <button class="analyze-btn" id="analyzeBtn" onclick="analyzeReport()">
+        🤖 Analyze with AI
+      </button>
+    </div>
+
+    <!-- Analysis Section -->
+    <div class="analysis-section" id="analysisSection">
+      <div class="analyzing" id="analyzing">
+        <div class="spinner"></div>
+        <h3>Analyzing your report...</h3>
+        <p style="color: #71717a; margin-top: 10px;">AI is scanning for abnormalities and red flags</p>
+      </div>
+
+      <!-- Results -->
+      <div class="results" id="results">
+        <!-- Summary Card -->
+        <div class="result-card full-width" id="summaryCard">
+          <div class="result-header">
+            <div class="result-icon" id="summaryIcon">🎯</div>
+            <div>
+              <h3 class="result-title" id="summaryTitle">Analysis Complete</h3>
+              <p style="color: #71717a; font-size: 14px;" id="summaryDate">Analyzed on: <span id="analysisDate"></span></p>
+            </div>
+          </div>
+          <div class="result-content" id="summaryContent">
+            Your lab report has been analyzed successfully.
+          </div>
+        </div>
+
+        <!-- Parameters Card -->
+        <div class="result-card">
+          <div class="result-header">
+            <div class="result-icon green">📊</div>
+            <h3 class="result-title">Key Parameters</h3>
+          </div>
+          <ul class="parameter-list" id="parameterList">
+            <!-- Dynamic content -->
+          </ul>
+        </div>
+
+        <!-- Red Flags Card -->
+        <div class="result-card" id="redFlagsCard">
+          <div class="result-header">
+            <div class="result-icon red">🚩</div>
+            <h3 class="result-title">Red Flags Detected</h3>
+          </div>
+          <div class="result-content" id="redFlagsContent">
+            <!-- Dynamic content -->
+          </div>
+        </div>
+
+        <!-- Recommendations Card -->
+        <div class="result-card full-width normal">
+          <div class="result-header">
+            <div class="result-icon green">💡</div>
+            <h3 class="result-title">AI Recommendations</h3>
+          </div>
+          <div class="recommendation-box">
+            <h4>Suggested Actions:</h4>
+            <ul id="recommendationsList">
+              <!-- Dynamic content -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons" style="display: none;" id="actionButtons">
+        <button class="action-btn primary" onclick="bookConsultation()">
+          📅 Book Doctor Consultation
+        </button>
+        <button class="action-btn secondary" onclick="downloadReport()">
+          📥 Download Analysis Report
+        </button>
+        <button class="action-btn secondary" onclick="resetUpload()">
+          🔄 Upload Another Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let uploadedFile = null;
+
+    // Drag and drop functionality
+    const uploadSection = document.getElementById('uploadSection');
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFile(files[0]);
+      }
+    });
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        handleFile(file);
+      }
+    }
+
+    function handleFile(file) {
+      // Validate file
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a PDF, JPG, or PNG file');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+
+      uploadedFile = file;
+
+      // Show preview
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileSize').textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+      document.getElementById('uploadSection').style.display = 'none';
+      document.getElementById('previewSection').classList.add('active');
+    }
+
+    function analyzeReport() {
+      if (!uploadedFile) return;
+
+      // Show analysis section
+      document.getElementById('previewSection').style.display = 'none';
+      document.getElementById('analysisSection').classList.add('active');
+      document.getElementById('analyzing').style.display = 'block';
+      document.getElementById('results').classList.remove('active');
+
+      // Simulate AI analysis (3 seconds)
+      setTimeout(() => {
+        performAIAnalysis();
+      }, 3000);
+    }
+
+    function performAIAnalysis() {
+      // Hide analyzing, show results
+      document.getElementById('analyzing').style.display = 'none';
+      document.getElementById('results').classList.add('active');
+      document.getElementById('actionButtons').style.display = 'flex';
+
+      // Set analysis date
+      document.getElementById('analysisDate').textContent = new Date().toLocaleString();
+
+      // Simulate AI analysis results
+      const hasRedFlags = Math.random() > 0.5; // 50% chance of red flags
+
+      // Generate random parameters
+      const parameters = [
+        { name: 'Hemoglobin', value: (Math.random() * 5 + 10).toFixed(1), unit: 'g/dL', normal: '12-16', status: getStatus(10, 16, parseFloat((Math.random() * 5 + 10).toFixed(1))) },
+        { name: 'WBC Count', value: (Math.random() * 6000 + 4000).toFixed(0), unit: '/μL', normal: '4000-11000', status: getStatus(4000, 11000, parseFloat((Math.random() * 6000 + 4000).toFixed(0))) },
+        { name: 'Platelet Count', value: (Math.random() * 200000 + 150000).toFixed(0), unit: '/μL', normal: '150000-450000', status: getStatus(150000, 450000, parseFloat((Math.random() * 200000 + 150000).toFixed(0))) },
+        { name: 'Blood Sugar', value: (Math.random() * 80 + 70).toFixed(0), unit: 'mg/dL', normal: '70-100', status: getStatus(70, 100, parseFloat((Math.random() * 80 + 70).toFixed(0))) },
+        { name: 'Cholesterol', value: (Math.random() * 100 + 150).toFixed(0), unit: 'mg/dL', normal: '<200', status: getStatus(0, 200, parseFloat((Math.random() * 100 + 150).toFixed(0))) },
+      ];
+
+      // Display parameters
+      const parameterList = document.getElementById('parameterList');
+      parameterList.innerHTML = '';
+      parameters.forEach(param => {
+        const li = document.createElement('li');
+        li.className = 'parameter-item';
+        li.innerHTML = `
+          <span class="parameter-name">${param.name}</span>
+          <span class="parameter-value">
+            <span>${param.value} ${param.unit}</span>
+            <span class="status-badge ${param.status}">${param.status.toUpperCase()}</span>
+          </span>
+        `;
+        parameterList.appendChild(li);
+      });
+
+      // Check for red flags
+      const redFlags = parameters.filter(p => p.status === 'high' || p.status === 'low');
+      
+      if (redFlags.length > 0) {
+        document.getElementById('summaryCard').className = 'result-card full-width red-flag';
+        document.getElementById('summaryIcon').innerHTML = '🚨';
+        document.getElementById('summaryIcon').className = 'result-icon red';
+        document.getElementById('summaryTitle').textContent = '⚠️ Attention Required';
+        document.getElementById('summaryContent').textContent = `${redFlags.length} parameter(s) are outside the normal range. Please consult with a doctor immediately.`;
+
+        // Red flags content
+        document.getElementById('redFlagsCard').className = 'result-card red-flag';
+        let redFlagsHTML = '<ul style="margin-left: 20px; color: #ef4444;">';
+        redFlags.forEach(flag => {
+          redFlagsHTML += `<li><strong>${flag.name}</strong>: ${flag.value} ${flag.unit} (Normal: ${flag.normal})</li>`;
+        });
+        redFlagsHTML += '</ul>';
+        document.getElementById('redFlagsContent').innerHTML = redFlagsHTML;
+
+        // Recommendations
+        const recommendations = [
+          'Consult with a healthcare professional within 24-48 hours',
+          'Avoid strenuous physical activity until consultation',
+          'Maintain proper hydration and balanced diet',
+          'Monitor symptoms and keep a health diary',
+          'Consider booking an urgent appointment with a specialist'
+        ];
+        
+        const recList = document.getElementById('recommendationsList');
+        recList.innerHTML = '';
+        recommendations.forEach(rec => {
+          const li = document.createElement('li');
+          li.textContent = rec;
+          recList.appendChild(li);
+        });
+      } else {
+        document.getElementById('summaryCard').className = 'result-card full-width normal';
+        document.getElementById('summaryIcon').innerHTML = '✅';
+        document.getElementById('summaryIcon').className = 'result-icon green';
+        document.getElementById('summaryTitle').textContent = 'All Parameters Normal';
+        document.getElementById('summaryContent').textContent = 'Great news! All your lab parameters are within the normal range. Continue maintaining a healthy lifestyle.';
+
+        document.getElementById('redFlagsCard').className = 'result-card normal';
+        document.getElementById('redFlagsContent').innerHTML = '<p style="color: #22c55e;">✅ No red flags detected. All parameters are within normal limits.</p>';
+
+        // Recommendations
+        const recommendations = [
+          'Continue with regular health checkups',
+          'Maintain a balanced diet and exercise routine',
+          'Stay hydrated and get adequate sleep',
+          'Schedule your next checkup in 6 months',
+          'Keep monitoring your health parameters'
+        ];
+        
+        const recList = document.getElementById('recommendationsList');
+        recList.innerHTML = '';
+        recommendations.forEach(rec => {
+          const li = document.createElement('li');
+          li.textContent = rec;
+          recList.appendChild(li);
+        });
+      }
+
+      // Save to localStorage
+      saveAnalysisToHistory(parameters, redFlags);
+    }
+
+    function getStatus(min, max, value) {
+      if (value < min) return 'low';
+      if (value > max) return 'high';
+      return 'normal';
+    }
+
+    function saveAnalysisToHistory(parameters, redFlags) {
+      const history = JSON.parse(localStorage.getItem('labReportsHistory') || '[]');
+      history.unshift({
+        date: new Date().toISOString(),
+        fileName: uploadedFile.name,
+        parameters: parameters,
+        redFlags: redFlags.length,
+        hasIssues: redFlags.length > 0
+      });
+      localStorage.setItem('labReportsHistory', JSON.stringify(history.slice(0, 10))); // Keep last 10
+    }
+
+    function bookConsultation() {
+      alert('Redirecting to doctor consultation booking...');
+      window.location.href = 'book-appointment.html';
+    }
+
+function submitReport() {
+  // Get current user info
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  
+  const reportData = {
+    userId: currentUser.userId || 'unknown',
+    patientName: document.getElementById('patientName').value,
+    age: document.getElementById('patientAge').value,
+    gender: document.getElementById('patientGender').value,
+    testType: document.getElementById('testType').value,
+    date: document.getElementById('testDate').value,
+    reportFile: document.getElementById('reportFile').files[0]?.name || 'No file uploaded',
+    symptoms: document.getElementById('symptoms').value,
+    medications: document.getElementById('medications').value,
+    uploadDate: new Date().toISOString(),
+    status: 'Completed',
+    result: 'Analysis Complete',
+    doctorName: 'AI Analysis System',
+    findings: 'Report processed successfully with AI analysis',
+    recommendations: 'Continue monitoring health parameters'
+  };
+
+  // Save to database if available
+  if (window.AarogyaDB) {
+    const result = window.AarogyaDB.create('labReports', reportData);
+    if (result.success) {
+      alert('✅ Lab report uploaded and saved successfully!\n\nReport ID: ' + result.data.id + '\nStatus: Analysis Complete');
+    } else {
+      alert('⚠️ Report uploaded but database save failed: ' + result.error);
+    }
+  } else {
+    // Fallback to localStorage
+    const reports = JSON.parse(localStorage.getItem('labReports') || '[]');
+    reports.push({...reportData, id: Date.now().toString()});
+    localStorage.setItem('labReports', JSON.stringify(reports));
+    alert('✅ Lab report uploaded successfully!\n\nStatus: Analysis Complete');
+  }
+
+  // Reset form
+  document.getElementById('reportForm').reset();
+}
+
+function resetUpload() {
+  uploadedFile = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('uploadSection').style.display = 'block';
+  document.getElementById('previewSection').classList.remove('active');
+  document.getElementById('analysisSection').classList.remove('active');
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('actionButtons').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

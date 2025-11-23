@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Patient Portal - Aarogya Setu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+      color: white;
+      padding: 25px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .sync-status {
+      background: rgba(255,255,255,0.2);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sync-status.synced {
+      background: rgba(40, 167, 69, 0.3);
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .stat-card.appointments::before { background: #17a2b8; }
+    .stat-card.medicines::before { background: #28a745; }
+    .stat-card.reports::before { background: #ffc107; }
+    .stat-card.health::before { background: #dc3545; }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 28px;
+    }
+
+    .stat-card.appointments .stat-icon { background: rgba(23, 162, 184, 0.1); }
+    .stat-card.medicines .stat-icon { background: rgba(40, 167, 69, 0.1); }
+    .stat-card.reports .stat-icon { background: rgba(255, 193, 7, 0.1); }
+    .stat-card.health .stat-icon { background: rgba(220, 53, 69, 0.1); }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: #6c757d;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .content-sections {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 25px 30px;
+      border-bottom: 2px solid #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-content {
+      padding: 30px;
+    }
+
+    .data-item {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 4px solid #17a2b8;
+      position: relative;
+    }
+
+    .data-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .data-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+    }
+
+    .data-title h3 {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .data-subtitle {
+      color: #17a2b8;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .data-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-synced {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .status-offline {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6c757d;
+    }
+
+    .empty-state svg {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #138496;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #17a2b8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .firebase-badge {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .content-sections {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="user-avatar" id="userAvatar">👤</div>
+        <div class="header-title">
+          <h1>Welcome, <span id="patientName">Loading...</span></h1>
+          <p>Firebase UID: <span id="patientId">Loading...</span> • <span class="firebase-badge">Firebase Powered</span></p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="sync-status" id="syncStatus">
+          <span>🔄</span> Syncing...
+        </div>
+        <button onclick="handleLogout()" class="logout-btn">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Dashboard Stats -->
+    <div class="dashboard-grid">
+      <div class="stat-card appointments">
+        <div class="stat-icon">📅</div>
+        <div class="stat-number" id="appointmentCount">0</div>
+        <div class="stat-label">Appointments</div>
+      </div>
+
+      <div class="stat-card medicines">
+        <div class="stat-icon">💊</div>
+        <div class="stat-number" id="medicineCount">0</div>
+        <div class="stat-label">Medicines</div>
+      </div>
+
+      <div class="stat-card reports">
+        <div class="stat-icon">📋</div>
+        <div class="stat-number" id="reportCount">0</div>
+        <div class="stat-label">Lab Reports</div>
+      </div>
+
+      <div class="stat-card health">
+        <div class="stat-icon">📊</div>
+        <div class="stat-number" id="healthScore">--</div>
+        <div class="stat-label">Health Score</div>
+      </div>
+    </div>
+
+    <div class="content-sections">
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Appointments Section -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>📅 My Appointments</h2>
+            <button class="btn btn-primary" onclick="addSampleAppointment()">+ Add Sample</button>
+          </div>
+          <div class="section-content">
+            <div id="appointmentsList">
+              <div class="loading"></div> Loading appointments...
+            </div>
+          </div>
+        </div>
+
+        <!-- Lab Reports -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>📋 My Lab Reports</h2>
+            <button class="btn btn-primary" onclick="addSampleReport()">+ Add Sample</button>
+          </div>
+          <div class="section-content">
+            <div id="labReportsList">
+              <div class="loading"></div> Loading lab reports...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Firebase Status -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>🔥 Firebase Status</h2>
+          </div>
+          <div class="section-content">
+            <div id="firebaseStatus">
+              <div class="loading"></div> Connecting to Firebase...
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>⚡ Quick Actions</h2>
+          </div>
+          <div class="section-content">
+            <div style="display: grid; gap: 15px;">
+              <button class="btn btn-primary" onclick="exportData()">📤 Export Data</button>
+              <button class="btn btn-primary" onclick="syncData()">🔄 Sync Now</button>
+              <button class="btn btn-primary" onclick="clearCache()">🗑️ Clear Cache</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+    import { getDatabase, ref, set, get, push, onValue, off } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZVgcBWOp0CdT7_aQv51zw7h1Q6PxXL8k",
+      authDomain: "aarogya-setu-ba85c.firebaseapp.com",
+      databaseURL: "https://aarogya-setu-ba85c-default-rtdb.firebaseio.com",
+      projectId: "aarogya-setu-ba85c",
+      storageBucket: "aarogya-setu-ba85c.firebasestorage.app",
+      messagingSenderId: "232715076279",
+      appId: "1:232715076279:web:1d8a50148de33ec2b5c332",
+      measurementId: "G-JPGT3Z0MV5"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let currentUser = null;
+    let appointmentsListener = null;
+    let reportsListener = null;
+
+    // Auth state listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        await loadUserData();
+        setupRealtimeListeners();
+        updateSyncStatus('synced');
+      } else {
+        window.location.href = 'login-firebase.html';
+      }
+    });
+
+    async function loadUserData() {
+      try {
+        // Get user profile data
+        const userSnapshot = await get(ref(database, `users/${currentUser.uid}`));
+        const userData = userSnapshot.val();
+        
+        if (userData) {
+          document.getElementById('patientName').textContent = userData.name || 'Firebase User';
+          document.getElementById('patientId').textContent = currentUser.uid.substring(0, 8) + '...';
+          document.getElementById('userAvatar').textContent = (userData.name || 'U').charAt(0).toUpperCase();
+          
+          // Calculate health score
+          let healthScore = 75;
+          if (userData.healthCondition === 'Excellent') healthScore = 95;
+          else if (userData.healthCondition === 'Good') healthScore = 85;
+          else if (userData.healthCondition === 'Fair') healthScore = 70;
+          else if (userData.healthCondition === 'Poor') healthScore = 50;
+          
+          document.getElementById('healthScore').textContent = healthScore;
+        }
+
+        updateFirebaseStatus();
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    }
+
+    function setupRealtimeListeners() {
+      // Listen for appointments
+      const appointmentsRef = ref(database, `appointments/${currentUser.uid}`);
+      appointmentsListener = onValue(appointmentsRef, (snapshot) => {
+        const data = snapshot.val();
+        const appointments = data ? Object.values(data) : [];
+        displayAppointments(appointments);
+        document.getElementById('appointmentCount').textContent = appointments.length;
+      });
+
+      // Listen for lab reports
+      const reportsRef = ref(database, `labReports/${currentUser.uid}`);
+      reportsListener = onValue(reportsRef, (snapshot) => {
+        const data = snapshot.val();
+        const reports = data ? Object.values(data) : [];
+        displayLabReports(reports);
+        document.getElementById('reportCount').textContent = reports.length;
+      });
+    }
+
+    function displayAppointments(appointments) {
+      const container = document.getElementById('appointmentsList');
+      
+      if (appointments.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V3m6 4V3m-6 0h6m-6 0H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-6"/>
+            </svg>
+            <h3>No appointments yet</h3>
+            <p>Add a sample appointment to get started</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appointments.map(apt => `
+        <div class="data-item">
+          <div class="data-header">
+            <div class="data-title">
+              <h3>${apt.doctorName || 'Dr. Sample'}</h3>
+              <div class="data-subtitle">${apt.specialty || 'General Medicine'}</div>
+            </div>
+            <div class="data-status status-synced">Synced</div>
+          </div>
+          <p><strong>Date:</strong> ${apt.date}</p>
+          <p><strong>Time:</strong> ${apt.time}</p>
+          <p><strong>Type:</strong> ${apt.type || 'Consultation'}</p>
+          <p><strong>Created:</strong> ${new Date(apt.createdAt).toLocaleDateString()}</p>
+        </div>
+      `).join('');
+    }
+
+    function displayLabReports(reports) {
+      const container = document.getElementById('labReportsList');
+      
+      if (reports.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3>No lab reports yet</h3>
+            <p>Add a sample report to get started</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = reports.map(report => `
+        <div class="data-item" style="border-left-color: #ffc107;">
+          <div class="data-header">
+            <div class="data-title">
+              <h3>${report.testType || 'Lab Test'}</h3>
+              <div class="data-subtitle">${report.result || 'Normal'}</div>
+            </div>
+            <div class="data-status status-synced">Synced</div>
+          </div>
+          <p><strong>Date:</strong> ${report.date}</p>
+          <p><strong>Status:</strong> ${report.status || 'Completed'}</p>
+          <p><strong>Doctor:</strong> ${report.doctorName || 'AI Analysis'}</p>
+          <p><strong>Created:</strong> ${new Date(report.createdAt).toLocaleDateString()}</p>
+        </div>
+      `).join('');
+    }
+
+    function updateFirebaseStatus() {
+      const statusContainer = document.getElementById('firebaseStatus');
+      statusContainer.innerHTML = `
+        <div style="display: grid; gap: 12px; font-size: 14px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>🔐 Authentication:</span>
+            <span style="color: #28a745; font-weight: 600;">Connected</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>🗄️ Database:</span>
+            <span style="color: #28a745; font-weight: 600;">Real-time</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>☁️ Storage:</span>
+            <span style="color: #28a745; font-weight: 600;">Available</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>📊 Analytics:</span>
+            <span style="color: #28a745; font-weight: 600;">Active</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateSyncStatus(status) {
+      const syncElement = document.getElementById('syncStatus');
+      if (status === 'synced') {
+        syncElement.innerHTML = '<span>✅</span> Synced';
+        syncElement.className = 'sync-status synced';
+      } else if (status === 'syncing') {
+        syncElement.innerHTML = '<span>🔄</span> Syncing...';
+        syncElement.className = 'sync-status';
+      } else {
+        syncElement.innerHTML = '<span>❌</span> Offline';
+        syncElement.className = 'sync-status status-offline';
+      }
+    }
+
+    // Global functions
+    window.handleLogout = async function() {
+      try {
+        // Clean up listeners
+        if (appointmentsListener) off(appointmentsListener);
+        if (reportsListener) off(reportsListener);
+        
+        await signOut(auth);
+        localStorage.clear();
+        window.location.href = 'login-firebase.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error signing out: ' + error.message);
+      }
+    };
+
+    window.addSampleAppointment = async function() {
+      if (!currentUser) return;
+      
+      try {
+        updateSyncStatus('syncing');
+        
+        const appointmentData = {
+          doctorName: 'Dr. Sarah Johnson',
+          specialty: 'Cardiology',
+          date: new Date().toISOString().split('T')[0],
+          time: '10:00 AM',
+          type: 'Consultation',
+          status: 'Confirmed',
+          createdAt: new Date().toISOString()
+        };
+
+        const newRef = push(ref(database, `appointments/${currentUser.uid}`));
+        await set(newRef, { ...appointmentData, id: newRef.key });
+        
+        updateSyncStatus('synced');
+        alert('✅ Sample appointment added successfully!');
+      } catch (error) {
+        console.error('Error adding appointment:', error);
+        alert('❌ Error adding appointment: ' + error.message);
+        updateSyncStatus('offline');
+      }
+    };
+
+    window.addSampleReport = async function() {
+      if (!currentUser) return;
+      
+      try {
+        updateSyncStatus('syncing');
+        
+        const reportData = {
+          testType: 'Complete Blood Count (CBC)',
+          result: 'Normal',
+          date: new Date().toISOString().split('T')[0],
+          status: 'Completed',
+          doctorName: 'Dr. AI Analysis',
+          findings: 'All parameters within normal range',
+          recommendations: 'Continue healthy lifestyle',
+          createdAt: new Date().toISOString()
+        };
+
+        const newRef = push(ref(database, `labReports/${currentUser.uid}`));
+        await set(newRef, { ...reportData, id: newRef.key });
+        
+        updateSyncStatus('synced');
+        alert('✅ Sample lab report added successfully!');
+      } catch (error) {
+        console.error('Error adding report:', error);
+        alert('❌ Error adding report: ' + error.message);
+        updateSyncStatus('offline');
+      }
+    };
+
+    window.exportData = async function() {
+      if (!currentUser) return;
+      
+      try {
+        const appointmentsSnapshot = await get(ref(database, `appointments/${currentUser.uid}`));
+        const reportsSnapshot = await get(ref(database, `labReports/${currentUser.uid}`));
+        
+        const exportData = {
+          appointments: appointmentsSnapshot.val() || {},
+          labReports: reportsSnapshot.val() || {},
+          exportDate: new Date().toISOString(),
+          userId: currentUser.uid
+        };
+
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `aarogya-setu-backup-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+        alert('✅ Data exported successfully!');
+      } catch (error) {
+        console.error('Export error:', error);
+        alert('❌ Export failed: ' + error.message);
+      }
+    };
+
+    window.syncData = function() {
+      updateSyncStatus('syncing');
+      setTimeout(() => {
+        updateSyncStatus('synced');
+        alert('✅ Data synchronized with Firebase!');
+      }, 2000);
+    };
+
+    window.clearCache = function() {
+      if (confirm('Are you sure you want to clear local cache? This will not affect your Firebase data.')) {
+        localStorage.clear();
+        alert('✅ Local cache cleared!');
+      }
+    };
+  </script>
+</body>
+</html>

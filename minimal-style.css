@@ -1,0 +1,433 @@
+/* Minimal & Aesthetic Design - Government Style */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #ffffff !important;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+/* Clean Header */
+.header {
+  background: #ffffff !important;
+  border-bottom: 3px solid #0066cc !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+  backdrop-filter: none !important;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+}
+
+.logo-text h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0066cc !important;
+  margin-bottom: 2px;
+}
+
+.logo-text p {
+  font-size: 13px;
+  color: #6c757d !important;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.contact-link {
+  color: #495057 !important;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.contact-link:hover {
+  background: #f8f9fa;
+  color: #0066cc !important;
+}
+
+.contact-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.language-btn {
+  background: #0066cc !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer;
+  transition: all 0.3s !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,102,204,0.15) !important;
+}
+
+.language-btn:hover {
+  background: #0052a3 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,102,204,0.25) !important;
+}
+
+/* Clean Hero */
+.hero {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  padding: 80px 40px !important;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.hero h2 {
+  font-size: 48px !important;
+  font-weight: 800 !important;
+  color: #2c3e50 !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  text-shadow: none !important;
+  filter: none !important;
+  letter-spacing: -1px !important;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 24px !important;
+  color: #0066cc !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px;
+}
+
+.description {
+  font-size: 18px !important;
+  color: #6c757d !important;
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+/* Clean Donation Banner */
+.donation-banner {
+  background: #0066cc !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 16px 40px !important;
+}
+
+.donation-banner p {
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+.donate-btn {
+  background: #ffffff !important;
+  color: #0066cc !important;
+  padding: 10px 24px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.donate-btn:hover {
+  background: #f8f9fa !important;
+  transform: translateY(-1px);
+}
+
+/* Clean Portal Cards */
+.portals-section {
+  background: #ffffff !important;
+  padding: 80px 40px !important;
+}
+
+.portals-section h2 {
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: #2c3e50 !important;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.portals-section p {
+  text-align: center;
+  color: #6c757d !important;
+  font-size: 16px;
+  margin-bottom: 50px;
+}
+
+.portal-card {
+  background: #ffffff !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  padding: 40px 30px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  backdrop-filter: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.portal-card::before,
+.portal-card::after {
+  display: none !important;
+}
+
+.portal-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: #0066cc !important;
+  box-shadow: 0 8px 24px rgba(0,102,204,0.12) !important;
+  background: #ffffff !important;
+}
+
+.portal-card h3 {
+  color: #2c3e50 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px;
+}
+
+.portal-card p {
+  color: #6c757d !important;
+  font-size: 15px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.portal-icon {
+  background: #f0f7ff !important;
+  border: 2px solid #e3f2fd !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 24px !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  box-shadow: none !important;
+}
+
+.portal-card:hover .portal-icon {
+  background: #0066cc !important;
+  border-color: #0066cc !important;
+  transform: scale(1.05) !important;
+}
+
+.portal-btn {
+  background: #0066cc !important;
+  color: white !important;
+  padding: 12px 28px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  display: inline-block;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,102,204,0.15) !important;
+}
+
+.portal-btn:hover {
+  background: #0052a3 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,102,204,0.25) !important;
+}
+
+/* Clean Voice Section */
+.voice-section {
+  background: #f8f9fa !important;
+  padding: 80px 40px !important;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.voice-section::before {
+  display: none !important;
+}
+
+.voice-container h2 {
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: #2c3e50 !important;
+  margin-bottom: 16px;
+}
+
+.voice-container p {
+  color: #6c757d !important;
+  font-size: 16px;
+  max-width: 700px;
+  margin: 0 auto 40px;
+}
+
+.voice-button {
+  background: #0066cc !important;
+  border: 4px solid #e3f2fd !important;
+  box-shadow: 0 4px 16px rgba(0,102,204,0.15) !important;
+}
+
+.voice-button::before {
+  border-color: #0066cc !important;
+}
+
+.voice-button:hover {
+  background: #0052a3 !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(0,102,204,0.25) !important;
+}
+
+.voice-status {
+  color: #6c757d !important;
+  font-size: 16px !important;
+}
+
+.voice-transcript {
+  background: #ffffff !important;
+  border: 2px solid #e9ecef !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  color: #0066cc !important;
+}
+
+/* Clean Doctors Section */
+.doctors-section {
+  background: #ffffff !important;
+  padding: 80px 40px !important;
+}
+
+.doctors-header h2 {
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: #2c3e50 !important;
+}
+
+.doctors-header p {
+  color: #6c757d !important;
+  font-size: 16px;
+}
+
+.doctor-card {
+  background: #ffffff !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  backdrop-filter: none !important;
+}
+
+.doctor-card:hover {
+  border-color: #0066cc !important;
+  box-shadow: 0 8px 24px rgba(0,102,204,0.12) !important;
+  transform: translateY(-8px) !important;
+}
+
+.doctor-name {
+  color: #2c3e50 !important;
+  font-weight: 700 !important;
+}
+
+.doctor-specialty {
+  color: #0066cc !important;
+  font-weight: 600 !important;
+}
+
+.doctor-experience {
+  color: #6c757d !important;
+}
+
+.book-consultation-btn,
+.book-btn {
+  background: #0066cc !important;
+  box-shadow: 0 2px 8px rgba(0,102,204,0.15) !important;
+}
+
+.book-consultation-btn:hover,
+.book-btn:hover {
+  background: #0052a3 !important;
+  box-shadow: 0 4px 12px rgba(0,102,204,0.25) !important;
+}
+
+/* Clean Footer */
+.footer {
+  background: #2c3e50 !important;
+  border-top: none !important;
+  padding: 60px 40px 30px !important;
+}
+
+.footer p {
+  color: #adb5bd !important;
+}
+
+/* Remove Dark Mode Effects */
+body::before,
+body::after {
+  display: none !important;
+}
+
+.bg-grid,
+.orb,
+.orb-1,
+.orb-2,
+.orb-3,
+.particles {
+  display: none !important;
+}
+
+/* Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0066cc;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0052a3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 36px !important;
+  }
+  
+  .portals-section h2,
+  .voice-container h2,
+  .doctors-header h2 {
+    font-size: 28px !important;
+  }
+}

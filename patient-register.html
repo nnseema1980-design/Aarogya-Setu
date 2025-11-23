@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration - Aarogya Setu</title>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+      background:linear-gradient(135deg,#17a2b8 0%,#138496 100%);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      color:#333;
+    }
+
+    .hero {
+      text-align:center;
+      padding:60px 20px 30px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0) 100%);
+      color:white;
+    }
+    .hero img {
+      width:100px;
+      height:100px;
+      object-fit:contain;
+      border-radius:20px;
+      background:white;
+      padding:10px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.25);
+      margin-bottom:15px;
+    }
+    .hero h1 {
+      font-size:2.5rem;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+    .hero p {
+      font-size:1.1rem;
+      margin-top:8px;
+      color:#f8fafc;
+    }
+
+    .container {
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:20px;
+    }
+
+    .register-card {
+      background:white;
+      border-radius:16px;
+      padding:40px 50px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.25);
+      max-width:600px;
+      width:100%;
+      margin-top:20px;
+    }
+
+    .register-header {
+      text-align:center;
+      margin-bottom:35px;
+    }
+
+    .user-icon {
+      width:80px;height:80px;
+      background:#e6f7f9;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 20px;
+    }
+    .user-icon svg {
+      width:40px;
+      height:40px;
+      fill:#17a2b8;
+    }
+    .register-header h2 {
+      font-size:26px;
+      color:#333;
+      margin-bottom:8px;
+    }
+    .register-header p {
+      color:#666;
+      font-size:14px;
+    }
+
+    .form-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      margin-bottom:25px;
+    }
+    .form-group {margin-bottom:25px;}
+    .form-group label {
+      display:block;
+      margin-bottom:8px;
+      color:#333;
+      font-weight:500;
+      font-size:14px;
+    }
+    .form-group input, .form-group select {
+      width:100%;
+      padding:14px 16px;
+      border:2px solid #e0e0e0;
+      border-radius:8px;
+      font-size:15px;
+      transition:all .3s;
+      outline:none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color:#17a2b8;
+      box-shadow:0 0 0 3px rgba(23,162,184,0.1);
+    }
+    .input-hint {
+      font-size:12px;
+      color:#666;
+      margin-top:5px;
+    }
+
+    .register-btn {
+      width:100%;
+      padding:15px;
+      background:#17a2b8;
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .3s;
+      margin-top:10px;
+    }
+    .register-btn:hover {
+      background:#138496;
+      transform:translateY(-2px);
+      box-shadow:0 5px 15px rgba(23,162,184,0.3);
+    }
+
+    .login-link {
+      text-align:center;
+      margin-top:25px;
+      color:#666;
+      font-size:14px;
+    }
+    .login-link a {
+      color:#17a2b8;
+      text-decoration:none;
+      font-weight:600;
+    }
+    .login-link a:hover {text-decoration:underline;}
+
+    .success-message {
+      background:#d4edda;
+      color:#155724;
+      padding:15px;
+      border-radius:8px;
+      margin-bottom:20px;
+      display:none;
+      border:1px solid #c3e6cb;
+    }
+
+    @media (max-width:768px) {
+      .hero img {width:80px;height:80px;}
+      .hero h1 {font-size:2rem;}
+      .register-card {padding:30px 25px;}
+      .form-row {grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <img src="logo.jpeg" alt="Aarogya Logo">
+    <h1>Patient Registration</h1>
+    <p>Create your Aarogya Setu account</p>
+  </section>
+
+  <div class="container">
+    <div class="register-card">
+      <div class="register-header">
+        <div class="user-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
+                     1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 
+                     1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <h2>New Patient Registration</h2>
+        <p>Fill in your details to get started</p>
+      </div>
+
+      <div class="success-message" id="successMsg">
+        Registration successful! Your Patient ID: <strong id="generatedId"></strong>
+      </div>
+
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" placeholder="Enter first name" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" placeholder="Enter last name" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+          <div class="input-hint">We'll send your Patient ID to this email</div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input type="tel" id="phone" placeholder="Enter 10-digit phone number" 
+                 maxlength="10" pattern="[0-9]{10}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="aadhar">Aadhaar Card Number *</label>
+          <input type="text" id="aadhar" placeholder="Enter 12-digit Aadhaar number"
+                 maxlength="12" pattern="[0-9]{12}" required>
+          <div class="input-hint">Enter your 12-digit Aadhaar number</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dob">Date of Birth *</label>
+            <input type="date" id="dob" required>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender *</label>
+            <select id="gender" required>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bloodGroup">Blood Group</label>
+          <select id="bloodGroup">
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address *</label>
+          <input type="text" id="address" placeholder="Enter your address" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input type="text" id="city" placeholder="Enter city" required>
+          </div>
+          <div class="form-group">
+            <label for="pincode">Pincode *</label>
+            <input type="text" id="pincode" placeholder="Enter pincode" 
+                   maxlength="6" pattern="[0-9]{6}" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Create Password *</label>
+          <input type="password" id="password" placeholder="Create a strong password" 
+                 minlength="6" required>
+          <div class="input-hint">Minimum 6 characters</div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password *</label>
+          <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+        </div>
+
+        <button type="submit" class="register-btn">Register Now</button>
+
+        <div class="login-link">
+          Already have an account? <a href="patient.html">Login Here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Generate unique patient ID
+    function generatePatientId() {
+      const prefix = 'PT';
+      const timestamp = Date.now().toString().slice(-8);
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      return `${prefix}${timestamp}${random}`;
+    }
+
+    // Phone number validation
+    document.getElementById('phone').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Aadhaar validation
+    document.getElementById('aadhar').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Pincode validation
+    document.getElementById('pincode').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Form submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const aadhar = document.getElementById('aadhar').value;
+      const phone = document.getElementById('phone').value;
+      const pincode = document.getElementById('pincode').value;
+
+      // Validation
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      if (aadhar.length !== 12 || !/^\d{12}$/.test(aadhar)) {
+        alert('Please enter a valid 12-digit Aadhaar number');
+        return;
+      }
+
+      if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+        alert('Please enter a valid 10-digit phone number');
+        return;
+      }
+
+      if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+        alert('Please enter a valid 6-digit pincode');
+        return;
+      }
+
+      // Generate unique patient ID
+      const patientId = generatePatientId();
+
+      // Collect form data
+      const patientData = {
+        patientId: patientId,
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: phone,
+        aadhar: aadhar,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        bloodGroup: document.getElementById('bloodGroup').value,
+        address: document.getElementById('address').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        pincode: pincode,
+        password: password,
+        registrationDate: new Date().toISOString(),
+        appointments: [],
+        medicalRecords: []
+      };
+
+      // Store in localStorage (simulating backend)
+      let patients = JSON.parse(localStorage.getItem('patients') || '[]');
+      
+      // Check if email or aadhar already exists
+      const existingPatient = patients.find(p => p.email === patientData.email || p.aadhar === patientData.aadhar);
+      if (existingPatient) {
+        alert('A patient with this email or Aadhaar already exists!');
+        return;
+      }
+
+      patients.push(patientData);
+      localStorage.setItem('patients', JSON.stringify(patients));
+
+      // Show success message
+      document.getElementById('generatedId').textContent = patientId;
+      document.getElementById('successMsg').style.display = 'block';
+      
+      // Reset form
+      document.getElementById('registerForm').reset();
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        alert(`Registration successful! Your Patient ID is: ${patientId}\n\nPlease save this ID for login.`);
+        window.location.href = 'patient.html';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

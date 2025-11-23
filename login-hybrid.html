@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Login - Aarogya Setu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 600px;
+    }
+
+    .login-left {
+      background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    .login-left h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .login-left p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .login-right {
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-header h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .login-methods {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .method-card {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .method-card:hover {
+      border-color: #0066cc;
+      transform: translateY(-2px);
+    }
+
+    .method-card.active {
+      border-color: #0066cc;
+      background: rgba(0, 102, 204, 0.05);
+    }
+
+    .method-icon {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .method-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .method-desc {
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 15px;
+    }
+
+    .method-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-available {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-testing {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0066cc, #0052a3);
+      color: white;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,102,204,0.4);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .demo-accounts {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .demo-accounts h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .demo-account {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .demo-account:hover {
+      border-color: #0066cc;
+      transform: translateY(-1px);
+    }
+
+    .demo-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 14px;
+    }
+
+    .demo-id {
+      color: #6c757d;
+      font-size: 12px;
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #fcc;
+    }
+
+    .success-message {
+      background: #efe;
+      color: #363;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #cfc;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #0066cc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-left">
+      <h1>🏥 Aarogya Setu</h1>
+      <p>Choose your preferred login method. We support both local storage and Firebase cloud authentication for maximum compatibility.</p>
+      
+      <div style="margin-top: 30px; text-align: left;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 14px;">
+          <div style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">💾</div>
+          <span>Local storage for offline access</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 14px;">
+          <div style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔥</div>
+          <span>Firebase cloud synchronization</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 14px;">
+          <div style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔒</div>
+          <span>Secure authentication</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="login-header">
+        <h2>Choose Login Method</h2>
+        <p>Select your preferred authentication system</p>
+      </div>
+
+      <div id="messageContainer"></div>
+
+      <!-- Method Selection -->
+      <div class="login-methods">
+        <div class="method-card" onclick="selectMethod('local')">
+          <div class="method-icon">💾</div>
+          <div class="method-title">Local Storage</div>
+          <div class="method-desc">Quick access with local data storage</div>
+          <div class="method-status status-available">Available</div>
+        </div>
+
+        <div class="method-card" onclick="selectMethod('firebase')">
+          <div class="method-icon">🔥</div>
+          <div class="method-title">Firebase Cloud</div>
+          <div class="method-desc">Real-time sync across all devices</div>
+          <div class="method-status status-testing">Testing</div>
+        </div>
+      </div>
+
+      <!-- Local Login Form -->
+      <div id="localLogin" class="hidden">
+        <div class="demo-accounts">
+          <h4>🎯 Demo Accounts (Local)</h4>
+          <div class="demo-account" onclick="quickLoginLocal('ravi123')">
+            <div class="demo-name">👤 Ravi Raj Choudhary</div>
+            <div class="demo-id">ID: ravi123 • Health: Fittest</div>
+          </div>
+          <div class="demo-account" onclick="quickLoginLocal('guest')">
+            <div class="demo-name">🆕 Guest User</div>
+            <div class="demo-id">ID: guest • New Account</div>
+          </div>
+        </div>
+
+        <form onsubmit="handleLocalLogin(event)">
+          <div class="form-group">
+            <label>User ID</label>
+            <input type="text" id="localUserId" required placeholder="Enter your unique ID">
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="localPassword" required placeholder="Enter your password">
+          </div>
+
+          <button type="submit" class="login-btn" id="localLoginBtn">
+            Sign In (Local)
+          </button>
+        </form>
+      </div>
+
+      <!-- Firebase Login Form -->
+      <div id="firebaseLogin" class="hidden">
+        <div class="demo-accounts">
+          <h4>🔥 Demo Account (Firebase)</h4>
+          <div class="demo-account" onclick="quickLoginFirebase()">
+            <div class="demo-name">👤 Demo User</div>
+            <div class="demo-id">Email: demo@aarogya.com • Password: demo123</div>
+          </div>
+        </div>
+
+        <form onsubmit="handleFirebaseLogin(event)">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="firebaseEmail" required placeholder="Enter your email">
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="firebasePassword" required placeholder="Enter your password">
+          </div>
+
+          <button type="submit" class="login-btn" id="firebaseLoginBtn">
+            Sign In (Firebase)
+          </button>
+        </form>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="index.html" style="color: #0066cc; text-decoration: none; font-weight: 600;">← Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script>
+    let selectedMethod = null;
+
+    // Initialize demo users for local storage
+    function initializeDemoUsers() {
+      const users = window.AarogyaDB ? window.AarogyaDB.getAll('users') : [];
+      const raviExists = users.find(user => user.userId === 'ravi123');
+      
+      if (!raviExists && window.AarogyaDB) {
+        window.AarogyaDB.create('users', {
+          name: "Ravi Raj Choudhary",
+          userId: "ravi123",
+          aadhar: "XXXX-XXXX-XXXX",
+          phone: "1800-XXX-XXXX",
+          email: "ravi.choudhary@email.com",
+          age: 25,
+          gender: "Male",
+          healthCondition: "Fittest",
+          password: "ravi123",
+          accountType: "patient",
+          status: "active"
+        });
+
+        // Add sample lab reports
+        window.AarogyaDB.create('labReports', {
+          userId: "ravi123",
+          patientName: "Ravi Raj Choudhary",
+          testType: "Complete Blood Count (CBC)",
+          date: "2025-11-05",
+          result: "Normal",
+          status: "Completed",
+          doctorName: "Dr. Sneha Reddy",
+          findings: "All parameters within normal range",
+          recommendations: "Continue healthy lifestyle"
+        });
+      }
+
+      const guestExists = users.find(user => user.userId === 'guest');
+      if (!guestExists && window.AarogyaDB) {
+        window.AarogyaDB.create('users', {
+          name: "Guest User",
+          userId: "guest",
+          aadhar: "XXXX-XXXX-XXXX",
+          phone: "1800-XXX-XXXX",
+          email: "guest@aarogya.com",
+          age: 30,
+          gender: "Other",
+          healthCondition: "Good",
+          password: "guest123",
+          accountType: "patient",
+          status: "active"
+        });
+      }
+    }
+
+    function selectMethod(method) {
+      selectedMethod = method;
+      
+      // Update UI
+      document.querySelectorAll('.method-card').forEach(card => card.classList.remove('active'));
+      event.target.closest('.method-card').classList.add('active');
+      
+      // Show appropriate form
+      document.getElementById('localLogin').classList.add('hidden');
+      document.getElementById('firebaseLogin').classList.add('hidden');
+      
+      if (method === 'local') {
+        document.getElementById('localLogin').classList.remove('hidden');
+        initializeDemoUsers();
+      } else if (method === 'firebase') {
+        document.getElementById('firebaseLogin').classList.remove('hidden');
+        loadFirebaseSDK();
+      }
+      
+      clearMessage();
+    }
+
+    function quickLoginLocal(userId) {
+      document.getElementById('localUserId').value = userId;
+      document.getElementById('localPassword').value = userId === 'ravi123' ? 'ravi123' : 'guest123';
+    }
+
+    function quickLoginFirebase() {
+      document.getElementById('firebaseEmail').value = 'demo@aarogya.com';
+      document.getElementById('firebasePassword').value = 'demo123';
+    }
+
+    function handleLocalLogin(event) {
+      event.preventDefault();
+      
+      const userId = document.getElementById('localUserId').value;
+      const password = document.getElementById('localPassword').value;
+      const loginBtn = document.getElementById('localLoginBtn');
+
+      loginBtn.innerHTML = '<div class="loading"></div>Signing in...';
+      loginBtn.disabled = true;
+
+      setTimeout(() => {
+        if (!window.AarogyaDB) {
+          showMessage('❌ Local database not available!', 'error');
+          loginBtn.innerHTML = 'Sign In (Local)';
+          loginBtn.disabled = false;
+          return;
+        }
+
+        const users = window.AarogyaDB.getAll('users');
+        const user = users.find(u => u.userId === userId && u.password === password);
+
+        if (user) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('loginMethod', 'local');
+          
+          showMessage('✅ Login successful! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'patient-portal.html';
+          }, 1500);
+        } else {
+          showMessage('❌ Invalid User ID or Password!', 'error');
+          loginBtn.innerHTML = 'Sign In (Local)';
+          loginBtn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    function handleFirebaseLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('firebaseEmail').value;
+      const password = document.getElementById('firebasePassword').value;
+      const loginBtn = document.getElementById('firebaseLoginBtn');
+
+      loginBtn.innerHTML = '<div class="loading"></div>Connecting to Firebase...';
+      loginBtn.disabled = true;
+
+      // Try to redirect to Firebase login
+      setTimeout(() => {
+        localStorage.setItem('pendingFirebaseLogin', JSON.stringify({ email, password }));
+        window.location.href = 'login-firebase.html';
+      }, 1500);
+    }
+
+    function loadFirebaseSDK() {
+      showMessage('🔥 Loading Firebase SDK...', 'success');
+    }
+
+    function showMessage(message, type) {
+      const container = document.getElementById('messageContainer');
+      container.innerHTML = `<div class="${type}-message">${message}</div>`;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          container.innerHTML = '';
+        }, 3000);
+      }
+    }
+
+    function clearMessage() {
+      document.getElementById('messageContainer').innerHTML = '';
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if there's a pending Firebase login
+      const pendingLogin = localStorage.getItem('pendingFirebaseLogin');
+      if (pendingLogin) {
+        localStorage.removeItem('pendingFirebaseLogin');
+        selectMethod('firebase');
+        const loginData = JSON.parse(pendingLogin);
+        document.getElementById('firebaseEmail').value = loginData.email;
+        document.getElementById('firebasePassword').value = loginData.password;
+        showMessage('🔥 Ready for Firebase login!', 'success');
+      }
+    });
+  </script>
+</body>
+</html>

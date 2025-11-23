@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Reminder - Aarogya Setu</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      background: linear-gradient(135deg, #006666 0%, #b8d4d4 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      background: #667eea;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      font-size: 22px;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .time-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+
+    .time-chip {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      color: #2c3e50;
+      cursor: pointer;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s;
+    }
+
+    .time-chip.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .add-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .medicine-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .medicine-item {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      border-left: 4px solid #667eea;
+      position: relative;
+    }
+
+    .medicine-item h3 {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .medicine-info {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .info-badge {
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    .times-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .time-badge {
+      background: #667eea;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #c82333;
+      transform: scale(1.1);
+    }
+
+    .notification-toggle {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: #ccc;
+      border-radius: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .toggle-switch.active {
+      background: #667eea;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: all 0.3s;
+    }
+
+    .toggle-switch.active::after {
+      left: 27px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6c757d;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💊 Medicine Reminder</h1>
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <div class="content-grid">
+      <!-- Add Medicine Form -->
+      <div class="card">
+        <h2>➕ Add New Medicine</h2>
+        
+        <div class="notification-toggle">
+          <div>
+            <strong>Enable Notifications</strong>
+            <p style="font-size: 12px; color: #6c757d; margin-top: 4px;">Get reminders for your medicines</p>
+          </div>
+          <div class="toggle-switch" id="notificationToggle" onclick="toggleNotifications()"></div>
+        </div>
+
+        <form id="medicineForm" onsubmit="addMedicine(event)">
+          <div class="form-group">
+            <label>Medicine Name *</label>
+            <input type="text" id="medicineName" required placeholder="e.g., Paracetamol">
+          </div>
+
+          <div class="form-group">
+            <label>Dosage *</label>
+            <input type="text" id="dosage" required placeholder="e.g., 500mg">
+          </div>
+
+          <div class="form-group">
+            <label>Frequency *</label>
+            <select id="frequency" required>
+              <option value="">Select frequency</option>
+              <option value="Once Daily">Once Daily</option>
+              <option value="Twice Daily">Twice Daily</option>
+              <option value="Three Times Daily">Three Times Daily</option>
+              <option value="Four Times Daily">Four Times Daily</option>
+              <option value="As Needed">As Needed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Timing</label>
+            <div class="time-inputs">
+              <div class="time-chip" data-time="Before Meal" onclick="toggleTime(this)">Before Meal</div>
+              <div class="time-chip" data-time="After Meal" onclick="toggleTime(this)">After Meal</div>
+              <div class="time-chip" data-time="With Meal" onclick="toggleTime(this)">With Meal</div>
+              <div class="time-chip" data-time="Empty Stomach" onclick="toggleTime(this)">Empty Stomach</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Reminder Times *</label>
+            <input type="time" id="time1" required>
+            <input type="time" id="time2" style="margin-top: 10px;">
+            <input type="time" id="time3" style="margin-top: 10px;">
+          </div>
+
+          <div class="form-group">
+            <label>Duration (Days)</label>
+            <input type="number" id="duration" min="1" placeholder="e.g., 7">
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea id="notes" rows="3" placeholder="Any special instructions..."></textarea>
+          </div>
+
+          <button type="submit" class="add-btn">Add Medicine</button>
+        </form>
+      </div>
+
+      <!-- Medicine List -->
+      <div class="card">
+        <h2>📋 Your Medicines</h2>
+        <div id="medicineList" class="medicine-list">
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3>No medicines added yet</h3>
+            <p>Add your first medicine to start tracking</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+    let notificationsEnabled = localStorage.getItem('medicineNotifications') === 'true';
+    let selectedTiming = '';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      if (notificationsEnabled) {
+        document.getElementById('notificationToggle').classList.add('active');
+        requestNotificationPermission();
+      }
+      displayMedicines();
+      checkReminders();
+      setInterval(checkReminders, 60000); // Check every minute
+    });
+
+    function toggleNotifications() {
+      notificationsEnabled = !notificationsEnabled;
+      localStorage.setItem('medicineNotifications', notificationsEnabled);
+      document.getElementById('notificationToggle').classList.toggle('active');
+      
+      if (notificationsEnabled) {
+        requestNotificationPermission();
+      }
+    }
+
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    function toggleTime(element) {
+      document.querySelectorAll('.time-chip').forEach(chip => chip.classList.remove('active'));
+      element.classList.add('active');
+      selectedTiming = element.dataset.time;
+    }
+
+    function addMedicine(event) {
+      event.preventDefault();
+
+      const times = [
+        document.getElementById('time1').value,
+        document.getElementById('time2').value,
+        document.getElementById('time3').value
+      ].filter(t => t);
+
+      const medicine = {
+        id: Date.now(),
+        name: document.getElementById('medicineName').value,
+        dosage: document.getElementById('dosage').value,
+        frequency: document.getElementById('frequency').value,
+        timing: selectedTiming || 'Anytime',
+        times: times,
+        duration: document.getElementById('duration').value || 'Ongoing',
+        notes: document.getElementById('notes').value,
+        startDate: new Date().toISOString().split('T')[0],
+        active: true
+      };
+
+      medicines.push(medicine);
+      localStorage.setItem('medicines', JSON.stringify(medicines));
+      
+      document.getElementById('medicineForm').reset();
+      document.querySelectorAll('.time-chip').forEach(chip => chip.classList.remove('active'));
+      selectedTiming = '';
+      
+      displayMedicines();
+      alert('✅ Medicine added successfully!');
+    }
+
+    function displayMedicines() {
+      const listContainer = document.getElementById('medicineList');
+      
+      if (medicines.length === 0) {
+        listContainer.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3>No medicines added yet</h3>
+            <p>Add your first medicine to start tracking</p>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = medicines.map(med => `
+        <div class="medicine-item">
+          <button class="delete-btn" onclick="deleteMedicine(${med.id})">×</button>
+          <h3>💊 ${med.name}</h3>
+          <div class="medicine-info">
+            <span class="info-badge">📏 ${med.dosage}</span>
+            <span class="info-badge">🔄 ${med.frequency}</span>
+            <span class="info-badge">🍽️ ${med.timing}</span>
+            <span class="info-badge">⏱️ ${med.duration} ${typeof med.duration === 'number' ? 'days' : ''}</span>
+          </div>
+          ${med.notes ? `<p style="color: #6c757d; font-size: 14px; margin-top: 10px;">📝 ${med.notes}</p>` : ''}
+          <div class="times-container">
+            ${med.times.map(time => `<span class="time-badge">⏰ ${time}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteMedicine(id) {
+      if (confirm('Are you sure you want to delete this medicine?')) {
+        medicines = medicines.filter(m => m.id !== id);
+        localStorage.setItem('medicines', JSON.stringify(medicines));
+        displayMedicines();
+      }
+    }
+
+    function checkReminders() {
+      if (!notificationsEnabled || Notification.permission !== 'granted') return;
+
+      const now = new Date();
+      const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+      medicines.forEach(med => {
+        med.times.forEach(time => {
+          if (time === currentTime) {
+            new Notification('💊 Medicine Reminder', {
+              body: `Time to take ${med.name} (${med.dosage})\n${med.timing}`,
+              icon: 'https://cdn-icons-png.flaticon.com/512/2913/2913133.png',
+              tag: med.id.toString()
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Portal - Aarogya Setu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      background: linear-gradient(135deg, #006666 0%, #b8d4d4 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #004d4d 0%, #006666 100%);
+      color: white;
+      padding: 25px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .stat-card.appointments::before { background: #17a2b8; }
+    .stat-card.medicines::before { background: #28a745; }
+    .stat-card.reports::before { background: #ffc107; }
+    .stat-card.health::before { background: #dc3545; }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 28px;
+    }
+
+    .stat-card.appointments .stat-icon { background: rgba(23, 162, 184, 0.1); }
+    .stat-card.medicines .stat-icon { background: rgba(40, 167, 69, 0.1); }
+    .stat-card.reports .stat-icon { background: rgba(255, 193, 7, 0.1); }
+    .stat-card.health .stat-icon { background: rgba(220, 53, 69, 0.1); }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: #6c757d;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .content-sections {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 25px 30px;
+      border-bottom: 2px solid #f8f9fa;
+      display: flex;
+      justify-content: between;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-content {
+      padding: 30px;
+    }
+
+    .appointment-item {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 4px solid #17a2b8;
+      position: relative;
+    }
+
+    .appointment-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .appointment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+    }
+
+    .doctor-info h3 {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .doctor-specialty {
+      color: #17a2b8;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .appointment-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-confirmed {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .status-completed {
+      background: rgba(23, 162, 184, 0.1);
+      color: #17a2b8;
+    }
+
+    .status-cancelled {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .appointment-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .detail-item strong {
+      color: #2c3e50;
+    }
+
+    .appointment-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #138496;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .medicine-item {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border-left: 4px solid #28a745;
+    }
+
+    .medicine-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .medicine-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .medicine-time {
+      background: #28a745;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .medicine-details {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: #6c757d;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .action-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 24px;
+    }
+
+    .action-card.book-appointment .action-icon {
+      background: rgba(23, 162, 184, 0.1);
+    }
+
+    .action-card.lab-reports .action-icon {
+      background: rgba(255, 193, 7, 0.1);
+    }
+
+    .action-card.health-insights .action-icon {
+      background: rgba(220, 53, 69, 0.1);
+    }
+
+    .action-card.medicine-reminder .action-icon {
+      background: rgba(40, 167, 69, 0.1);
+    }
+
+    .action-card.prescription .action-icon {
+      background: rgba(108, 117, 125, 0.1);
+    }
+
+    .action-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .action-desc {
+      font-size: 12px;
+      color: #6c757d;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6c757d;
+    }
+
+    .empty-state svg {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .content-sections {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .appointment-details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="user-avatar">👤</div>
+        <div class="header-title">
+          <h1>Welcome, <span id="patientName">John Doe</span></h1>
+          <p>Patient ID: <span id="patientId">PT001</span> • Last Login: Today, 3:45 PM</p>
+        </div>
+      </div>
+      <a href="index.html" class="logout-btn">← Back to Home</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Dashboard Stats -->
+    <div class="dashboard-grid">
+      <div class="stat-card appointments">
+        <div class="stat-icon">📅</div>
+        <div class="stat-number" id="appointmentCount">0</div>
+        <div class="stat-label">Total Appointments</div>
+      </div>
+
+      <div class="stat-card medicines">
+        <div class="stat-icon">💊</div>
+        <div class="stat-number" id="medicineCount">0</div>
+        <div class="stat-label">Active Medicines</div>
+      </div>
+
+      <div class="stat-card reports">
+        <div class="stat-icon">📋</div>
+        <div class="stat-number" id="reportCount">0</div>
+        <div class="stat-label">Lab Reports</div>
+      </div>
+
+      <div class="stat-card health">
+        <div class="stat-icon">📊</div>
+        <div class="stat-number" id="healthScore">--</div>
+        <div class="stat-label">Health Score</div>
+      </div>
+    </div>
+
+    <div class="content-sections">
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Appointments Section -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>📅 My Appointments</h2>
+          </div>
+          <div class="section-content">
+            <div id="appointmentsList">
+              <!-- Appointments will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Lab Reports -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>📋 My Lab Reports</h2>
+          </div>
+          <div class="section-content">
+            <div id="labReportsList">
+              <!-- Lab reports will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Medicine Reminders -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>💊 Medicine Reminders</h2>
+          </div>
+          <div class="section-content">
+            <div id="medicinesList">
+              <!-- Medicines will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Quick Actions -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>⚡ Quick Actions</h2>
+          </div>
+          <div class="section-content">
+            <div class="quick-actions">
+              <a href="index.html#doctors-section" class="action-card book-appointment">
+                <div class="action-icon">📅</div>
+                <div class="action-title">Book Appointment</div>
+                <div class="action-desc">Schedule with doctors</div>
+              </a>
+
+              <a href="lab-reports.html" class="action-card lab-reports">
+                <div class="action-icon">📋</div>
+                <div class="action-title">Lab Reports</div>
+                <div class="action-desc">Upload & analyze reports</div>
+              </a>
+
+              <a href="health-insights.html" class="action-card health-insights">
+                <div class="action-icon">📊</div>
+                <div class="action-title">Health Insights</div>
+                <div class="action-desc">Track your health data</div>
+              </a>
+
+              <a href="medicine-reminder.html" class="action-card medicine-reminder">
+                <div class="action-icon">💊</div>
+                <div class="action-title">Medicine Reminder</div>
+                <div class="action-desc">Manage medications</div>
+              </a>
+
+              <div class="action-card prescription" onclick="showPrescriptionModal()">
+                <div class="action-icon">📝</div>
+                <div class="action-title">My Prescriptions</div>
+                <div class="action-desc">View & manage prescriptions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>🕒 Recent Activity</h2>
+          </div>
+          <div class="section-content">
+            <div id="recentActivity">
+              <!-- Recent activity will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescription Modal -->
+  <div id="prescriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 20px; padding: 30px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="color: #006666; font-size: 24px; font-weight: 700;">📝 My Prescriptions</h2>
+        <button onclick="closePrescriptionModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+      </div>
+      <div id="prescriptionContent">
+        <!-- Prescription content will be loaded here -->
+      </div>
+      
+      <!-- Upload Prescription Section -->
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+        <h3 style="color: #006666; font-size: 18px; margin-bottom: 15px;">📤 Upload New Prescription</h3>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="file" id="prescriptionFile" accept="image/*,.pdf" style="flex: 1; padding: 10px; border: 2px dashed #006666; border-radius: 8px; background: #f8f9fa;">
+          <button onclick="uploadPrescription()" style="background: #006666; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap;">
+            Upload
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">
+          📋 Upload images or PDF files of your prescriptions. Supported formats: JPG, PNG, PDF
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script>
+    let currentUser = null;
+
+    // Initialize patient portal
+    document.addEventListener('DOMContentLoaded', function() {
+      checkLogin();
+      loadPatientData();
+      loadAppointments();
+      loadMedicines();
+      loadLabReports();
+      loadRecentActivity();
+      updateStats();
+      initializePrescriptions();
+    });
+
+    // Check if user is logged in
+    function checkLogin() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userData = localStorage.getItem('currentUser');
+      
+      if (!isLoggedIn || !userData) {
+        alert('⚠️ Please login to access patient portal');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      currentUser = JSON.parse(userData);
+    }
+
+    // Load patient data
+    function loadPatientData() {
+      if (currentUser) {
+        document.getElementById('patientName').textContent = currentUser.name;
+        document.getElementById('patientId').textContent = currentUser.userId;
+        
+        // Update user avatar with first letter
+        const avatar = document.querySelector('.user-avatar');
+        avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+      }
+    }
+
+    // Load appointments
+    function loadAppointments() {
+      const allAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+      // Filter appointments for current user
+      const appointments = allAppointments.filter(apt => 
+        apt.patient && apt.patient.name === currentUser.name
+      );
+      const appointmentsList = document.getElementById('appointmentsList');
+      
+      if (appointments.length === 0) {
+        appointmentsList.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V3m6 4V3m-6 0h6m-6 0H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-6"/>
+            </svg>
+            <h3>No appointments yet</h3>
+            <p>Book your first appointment with our doctors</p>
+          </div>
+        `;
+        return;
+      }
+
+      appointmentsList.innerHTML = appointments.map(apt => `
+        <div class="appointment-item">
+          <div class="appointment-header">
+            <div class="doctor-info">
+              <h3>${apt.doctor.name}</h3>
+              <div class="doctor-specialty">${apt.doctor.specialty}</div>
+            </div>
+            <div class="appointment-status status-${apt.status.toLowerCase()}">
+              ${apt.status}
+            </div>
+          </div>
+          
+          <div class="appointment-details">
+            <div class="detail-item">
+              📅 <strong>${apt.appointment.date}</strong>
+            </div>
+            <div class="detail-item">
+              🕐 <strong>${apt.appointment.time}</strong>
+            </div>
+            <div class="detail-item">
+              💰 <strong>${apt.doctor.fee}</strong>
+            </div>
+            <div class="detail-item">
+              📋 <strong>ID:</strong> ${apt.bookingId}
+            </div>
+          </div>
+          
+          ${apt.appointment.reason ? `
+            <div class="detail-item" style="margin-bottom: 15px;">
+              📝 <strong>Reason:</strong> ${apt.appointment.reason}
+            </div>
+          ` : ''}
+          
+          <div class="appointment-actions">
+            ${apt.status === 'Confirmed' ? `
+              <button class="btn btn-primary" onclick="rescheduleAppointment('${apt.bookingId}')">
+                📅 Reschedule
+              </button>
+              <button class="btn btn-secondary" onclick="viewDetails('${apt.bookingId}')">
+                👁️ View Details
+              </button>
+              <button class="btn btn-danger" onclick="cancelAppointment('${apt.bookingId}')">
+                ❌ Cancel
+              </button>
+            ` : apt.status === 'Pending' ? `
+              <button class="btn btn-primary" onclick="confirmAppointment('${apt.bookingId}')">
+                ✅ Confirm
+              </button>
+              <button class="btn btn-danger" onclick="cancelAppointment('${apt.bookingId}')">
+                ❌ Cancel
+              </button>
+            ` : `
+              <button class="btn btn-secondary" onclick="viewDetails('${apt.bookingId}')">
+                👁️ View Details
+              </button>
+            `}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Load medicines
+    function loadMedicines() {
+      const medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+      const medicinesList = document.getElementById('medicinesList');
+      
+      if (medicines.length === 0) {
+        medicinesList.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+            </svg>
+            <h3>No medicines added</h3>
+            <p>Add your medicines to get reminders</p>
+          </div>
+        `;
+        return;
+      }
+
+      const activeMedicines = medicines.slice(0, 3); // Show only first 3
+      medicinesList.innerHTML = activeMedicines.map(med => `
+        <div class="medicine-item">
+          <div class="medicine-header">
+            <div class="medicine-name">💊 ${med.name}</div>
+            <div class="medicine-time">Next: ${med.times[0] || 'Not set'}</div>
+          </div>
+          <div class="medicine-details">
+            <span><strong>Dosage:</strong> ${med.dosage}</span>
+            <span><strong>Frequency:</strong> ${med.frequency}</span>
+            <span><strong>Timing:</strong> ${med.timing}</span>
+          </div>
+        </div>
+      `).join('') + (medicines.length > 3 ? `
+        <div style="text-align: center; margin-top: 15px;">
+          <a href="medicine-reminder.html" class="btn btn-primary">View All Medicines (${medicines.length})</a>
+        </div>
+      ` : '');
+    }
+
+    // Load lab reports
+    function loadLabReports() {
+      const allReports = window.AarogyaDB.getAll('labReports');
+      // Filter reports for current user
+      const reports = allReports.filter(report => 
+        report.userId === currentUser.userId
+      );
+      const reportsList = document.getElementById('labReportsList');
+      
+      if (reports.length === 0) {
+        reportsList.innerHTML = `
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3>No lab reports yet</h3>
+            <p>Upload your first lab report for AI analysis</p>
+          </div>
+        `;
+        return;
+      }
+
+      reportsList.innerHTML = reports.map(report => `
+        <div class="appointment-item" style="border-left-color: #ffc107;">
+          <div class="appointment-header">
+            <div class="doctor-info">
+              <h3>📋 ${report.testType}</h3>
+              <div class="doctor-specialty">Dr. ${report.doctorName || 'Not specified'}</div>
+            </div>
+            <div class="appointment-status status-${report.status.toLowerCase()}">
+              ${report.status}
+            </div>
+          </div>
+          
+          <div class="appointment-details">
+            <div class="detail-item">
+              📅 <strong>${report.date}</strong>
+            </div>
+            <div class="detail-item">
+              🔬 <strong>${report.result}</strong>
+            </div>
+            <div class="detail-item">
+              📄 <strong>${report.reportFile || 'Digital Report'}</strong>
+            </div>
+          </div>
+          
+          ${report.findings ? `
+            <div class="detail-item" style="margin: 15px 0;">
+              🔍 <strong>Findings:</strong> ${report.findings}
+            </div>
+          ` : ''}
+          
+          ${report.recommendations ? `
+            <div class="detail-item" style="margin-bottom: 15px;">
+              💡 <strong>Recommendations:</strong> ${report.recommendations}
+            </div>
+          ` : ''}
+          
+          <div class="appointment-actions">
+            <button class="btn btn-primary" onclick="viewReport('${report.id}')">
+              👁️ View Details
+            </button>
+            <button class="btn btn-secondary" onclick="downloadReport('${report.id}')">
+              📥 Download
+            </button>
+            <a href="lab-reports.html" class="btn btn-primary">
+              📤 Upload New Report
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Load recent activity
+    function loadRecentActivity() {
+      const activities = [
+        { icon: '📅', text: 'Appointment booked with Dr. Smith', time: '2 hours ago' },
+        { icon: '💊', text: 'Medicine reminder added', time: '1 day ago' },
+        { icon: '📋', text: 'Lab report uploaded', time: '3 days ago' },
+        { icon: '📊', text: 'Health data updated', time: '1 week ago' }
+      ];
+
+      const activityContainer = document.getElementById('recentActivity');
+      activityContainer.innerHTML = activities.map(activity => `
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+          <span style="font-size: 20px;">${activity.icon}</span>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; color: #2c3e50; font-weight: 600;">${activity.text}</div>
+            <div style="font-size: 12px; color: #6c757d;">${activity.time}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update statistics
+    function updateStats() {
+      const allAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+      const userAppointments = allAppointments.filter(apt => 
+        apt.patient && apt.patient.name === currentUser.name
+      );
+      
+      const medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+      
+      const allReports = window.AarogyaDB.getAll('labReports');
+      const userReports = allReports.filter(report => 
+        report.userId === currentUser.userId
+      );
+      
+      document.getElementById('appointmentCount').textContent = userAppointments.length;
+      document.getElementById('medicineCount').textContent = medicines.length;
+      document.getElementById('reportCount').textContent = userReports.length;
+      
+      // Calculate health score based on user's health condition
+      let healthScore = 75; // Default
+      if (currentUser.healthCondition === 'Fittest' || currentUser.healthCondition === 'Excellent') {
+        healthScore = 95;
+      } else if (currentUser.healthCondition === 'Good') {
+        healthScore = 85;
+      } else if (currentUser.healthCondition === 'Fair') {
+        healthScore = 70;
+      } else if (currentUser.healthCondition === 'Poor') {
+        healthScore = 50;
+      }
+      
+      document.getElementById('healthScore').textContent = healthScore;
+    }
+
+    // Lab report actions
+    function viewReport(reportId) {
+      const reports = window.AarogyaDB.getAll('labReports');
+      const report = reports.find(r => r.id === reportId);
+      
+      if (report) {
+        alert(`📋 Lab Report Details:\n\nTest: ${report.testType}\nDate: ${report.date}\nResult: ${report.result}\nStatus: ${report.status}\nDoctor: ${report.doctorName || 'Not specified'}\n\nFindings: ${report.findings || 'Not available'}\n\nRecommendations: ${report.recommendations || 'Not available'}`);
+      }
+    }
+
+    function downloadReport(reportId) {
+      const reports = window.AarogyaDB.getAll('labReports');
+      const report = reports.find(r => r.id === reportId);
+      
+      if (report) {
+        alert(`📥 Download started for: ${report.reportFile || 'Digital Report'}\n\nNote: This is a demo. In a real application, the file would be downloaded.`);
+      }
+    }
+
+    // Appointment actions
+    function rescheduleAppointment(bookingId) {
+      alert('🔄 Reschedule feature coming soon!\nBooking ID: ' + bookingId);
+    }
+
+    function viewDetails(bookingId) {
+      const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+      const appointment = appointments.find(apt => apt.bookingId === bookingId);
+      
+      if (appointment) {
+        alert(`📋 Appointment Details:\n\nDoctor: ${appointment.doctor.name}\nSpecialty: ${appointment.doctor.specialty}\nDate: ${appointment.appointment.date}\nTime: ${appointment.appointment.time}\nStatus: ${appointment.status}\nBooking ID: ${appointment.bookingId}\nFee: ${appointment.doctor.fee}`);
+      }
+    }
+
+    function cancelAppointment(bookingId) {
+      if (confirm('❌ Are you sure you want to cancel this appointment?')) {
+        let appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const index = appointments.findIndex(apt => apt.bookingId === bookingId);
+        
+        if (index !== -1) {
+          appointments[index].status = 'Cancelled';
+          localStorage.setItem('appointments', JSON.stringify(appointments));
+          loadAppointments();
+          updateStats();
+          alert('✅ Appointment cancelled successfully!');
+        }
+      }
+    }
+
+    function confirmAppointment(bookingId) {
+      let appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+      const index = appointments.findIndex(apt => apt.bookingId === bookingId);
+      
+      if (index !== -1) {
+        appointments[index].status = 'Confirmed';
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+        loadAppointments();
+        updateStats();
+        alert('✅ Appointment confirmed successfully!');
+      }
+    }
+
+    // Prescription Management Functions
+    function initializePrescriptions() {
+      // Initialize sample prescriptions for Ravi Raj
+      if (currentUser && currentUser.name === 'Ravi Raj Choudhary') {
+        const existingPrescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+        if (existingPrescriptions.length === 0) {
+          const samplePrescriptions = [
+            {
+              id: 'RX001',
+              patientId: 'ravi123',
+              doctorName: 'Dr. Sharma',
+              date: '2024-11-05',
+              medicines: [
+                { name: 'Paracetamol 500mg', dosage: '1 tablet', frequency: '3 times daily', duration: '5 days', instructions: 'After meals' },
+                { name: 'Vitamin D3', dosage: '1 capsule', frequency: 'Once daily', duration: '30 days', instructions: 'With breakfast' },
+                { name: 'Omega-3', dosage: '1 softgel', frequency: 'Twice daily', duration: '60 days', instructions: 'With meals' }
+              ],
+              diagnosis: 'General wellness and vitamin deficiency',
+              notes: 'Continue healthy diet and regular exercise'
+            },
+            {
+              id: 'RX002',
+              patientId: 'ravi123',
+              doctorName: 'Dr. Patel',
+              date: '2024-10-28',
+              medicines: [
+                { name: 'Cetirizine 10mg', dosage: '1 tablet', frequency: 'Once daily', duration: '7 days', instructions: 'Before bedtime' },
+                { name: 'Multivitamin', dosage: '1 tablet', frequency: 'Once daily', duration: '30 days', instructions: 'After breakfast' }
+              ],
+              diagnosis: 'Seasonal allergies',
+              notes: 'Avoid allergens, use air purifier'
+            }
+          ];
+          localStorage.setItem('prescriptions', JSON.stringify(samplePrescriptions));
+        }
+      }
+    }
+
+    function showPrescriptionModal() {
+      const modal = document.getElementById('prescriptionModal');
+      modal.style.display = 'flex';
+      loadPrescriptions();
+      
+      // Add ESC key listener
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    function closePrescriptionModal() {
+      const modal = document.getElementById('prescriptionModal');
+      modal.style.display = 'none';
+      
+      // Remove ESC key listener
+      document.removeEventListener('keydown', handleEscKey);
+    }
+
+    function handleEscKey(event) {
+      if (event.key === 'Escape') {
+        closePrescriptionModal();
+      }
+    }
+
+    function loadPrescriptions() {
+      const prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+      const userPrescriptions = prescriptions.filter(rx => rx.patientId === currentUser.userId);
+      const content = document.getElementById('prescriptionContent');
+
+      if (userPrescriptions.length === 0) {
+        content.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📝</div>
+            <h3>No prescriptions found</h3>
+            <p>Your prescriptions will appear here when doctors add them.</p>
+          </div>
+        `;
+        return;
+      }
+
+      content.innerHTML = userPrescriptions.map(rx => `
+        <div style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px; background: #f8f9fa;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+              <h3 style="color: #006666; margin: 0; font-size: 18px;">Prescription #${rx.id}</h3>
+              <p style="color: #666; margin: 5px 0 0; font-size: 14px;">Dr. ${rx.doctorName} • ${rx.date}</p>
+            </div>
+            <div style="background: #006666; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px;">
+              ${rx.medicines.length} medicines
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <strong style="color: #004d4d;">Diagnosis:</strong> ${rx.diagnosis}
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <strong style="color: #004d4d;">Medicines:</strong>
+            <div style="margin-top: 10px;">
+              ${rx.medicines.map(med => `
+                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #28a745;">
+                  <div style="font-weight: 600; color: #2c3e50; margin-bottom: 5px;">💊 ${med.name}</div>
+                  <div style="font-size: 13px; color: #666; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <span><strong>Dosage:</strong> ${med.dosage}</span>
+                    <span><strong>Frequency:</strong> ${med.frequency}</span>
+                    <span><strong>Duration:</strong> ${med.duration}</span>
+                    <span><strong>Instructions:</strong> ${med.instructions}</span>
+                  </div>
+                  <button onclick="addToReminder('${med.name}', '${med.dosage}', '${med.frequency}')" 
+                          style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; margin-top: 8px; cursor: pointer;">
+                    ⏰ Add to Reminders
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          ${rx.notes ? `
+            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; border-left: 4px solid #2196f3;">
+              <strong style="color: #1976d2;">Doctor's Notes:</strong>
+              <p style="margin: 5px 0 0; color: #1976d2;">${rx.notes}</p>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addToReminder(medicineName, dosage, frequency) {
+      // Get existing medicines
+      const medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+      
+      // Check if medicine already exists
+      const existingMedicine = medicines.find(med => med.name === medicineName);
+      if (existingMedicine) {
+        alert('💊 This medicine is already in your reminders!');
+        return;
+      }
+
+      // Add new medicine
+      const newMedicine = {
+        id: Date.now().toString(),
+        name: medicineName,
+        dosage: dosage,
+        frequency: frequency,
+        timing: frequency.includes('3') ? 'Morning, Afternoon, Evening' : 
+                frequency.includes('2') ? 'Morning, Evening' : 'Morning',
+        times: frequency.includes('3') ? ['08:00', '14:00', '20:00'] :
+               frequency.includes('2') ? ['08:00', '20:00'] : ['08:00'],
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days
+        isActive: true,
+        createdAt: new Date().toISOString()
+      };
+
+      medicines.push(newMedicine);
+      localStorage.setItem('medicines', JSON.stringify(medicines));
+      
+      alert(`✅ ${medicineName} added to your medicine reminders!`);
+      
+      // Refresh medicine count
+      updateStats();
+      loadMedicines();
+    }
+
+    function uploadPrescription() {
+      const fileInput = document.getElementById('prescriptionFile');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert('⚠️ Please select a file to upload');
+        return;
+      }
+      
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('⚠️ Please upload only JPG, PNG, or PDF files');
+        return;
+      }
+      
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('⚠️ File size should be less than 5MB');
+        return;
+      }
+      
+      // Simulate upload process
+      const uploadBtn = event.target;
+      const originalText = uploadBtn.textContent;
+      uploadBtn.textContent = 'Uploading...';
+      uploadBtn.disabled = true;
+      
+      setTimeout(() => {
+        // Create new prescription entry
+        const prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+        const newPrescription = {
+          id: 'RX' + Date.now().toString().slice(-6),
+          patientId: currentUser.userId,
+          doctorName: 'Uploaded by Patient',
+          date: new Date().toISOString().split('T')[0],
+          medicines: [
+            { 
+              name: 'Prescription medicines', 
+              dosage: 'As prescribed', 
+              frequency: 'As directed', 
+              duration: 'As mentioned', 
+              instructions: 'Follow doctor instructions' 
+            }
+          ],
+          diagnosis: 'Uploaded prescription - pending review',
+          notes: `Uploaded file: ${file.name}`,
+          uploadedFile: file.name,
+          uploadDate: new Date().toISOString(),
+          status: 'Pending Review'
+        };
+        
+        prescriptions.push(newPrescription);
+        localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
+        
+        // Reset upload button
+        uploadBtn.textContent = originalText;
+        uploadBtn.disabled = false;
+        fileInput.value = '';
+        
+        // Show success message
+        alert(`✅ Prescription uploaded successfully!\n\nFile: ${file.name}\nPrescription ID: ${newPrescription.id}\n\nYour prescription is pending review by our medical team.`);
+        
+        // Reload prescriptions
+        loadPrescriptions();
+        
+      }, 2000); // Simulate 2 second upload time
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('prescriptionModal');
+      if (event.target === modal) {
+        closePrescriptionModal();
+      }
+    });
+  </script>
+</body>
+</html>

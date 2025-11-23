@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Aarogya Setu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      background: linear-gradient(135deg, #006666 0%, #b8d4d4 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 600px;
+    }
+
+    .login-left {
+      background: linear-gradient(135deg, #004d4d 0%, #006666 100%);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    .login-left h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .login-left p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .feature-icon {
+      width: 30px;
+      height: 30px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .login-right {
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-header h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #006666;
+      box-shadow: 0 0 0 3px rgba(0,102,102,0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #006666, #004d4d);
+      color: white;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,102,102,0.4);
+    }
+
+    .register-link {
+      text-align: center;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .register-link a {
+      color: #006666;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    .demo-accounts {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .demo-accounts h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .demo-account {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .demo-account:hover {
+      border-color: #006666;
+      transform: translateY(-1px);
+    }
+
+    .demo-account:last-child {
+      margin-bottom: 0;
+    }
+
+    .demo-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 14px;
+    }
+
+    .demo-id {
+      color: #6c757d;
+      font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .login-left {
+        padding: 40px 30px;
+      }
+      
+      .login-right {
+        padding: 40px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-left">
+      <h1>🏥 Aarogya Setu</h1>
+      <p>Your comprehensive digital health companion. Access personalized healthcare services, manage appointments, and track your health journey.</p>
+      
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📅</div>
+          <span>Book appointments with verified doctors</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📋</div>
+          <span>Upload and manage lab reports</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💊</div>
+          <span>Medicine reminders and tracking</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <span>Health insights and analytics</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🤖</div>
+          <span>AI-powered health analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your health dashboard</p>
+      </div>
+
+      <div class="demo-accounts">
+        <h4>🎯 Quick Login (Demo Accounts)</h4>
+        <div class="demo-account" onclick="quickLogin('ravi123')">
+          <div class="demo-name">👤 Ravi Raj Choudhary</div>
+          <div class="demo-id">ID: ravi123 • Health: Fittest</div>
+        </div>
+        <div class="demo-account" onclick="quickLogin('guest')">
+          <div class="demo-name">🆕 Guest User</div>
+          <div class="demo-id">ID: guest • New Account</div>
+        </div>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" id="userId" required placeholder="Enter your unique ID">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" required placeholder="Enter your password">
+        </div>
+
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+
+      <div class="register-link">
+        Don't have an account? <a href="#" onclick="showRegister()">Create new account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div id="registerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 20px; max-width: 500px; width: 90%; padding: 40px; max-height: 80vh; overflow-y: auto;">
+      <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50;">Create New Account</h2>
+      
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="regName" required placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+          <label>Unique ID *</label>
+          <input type="text" id="regUserId" required placeholder="Choose a unique ID">
+        </div>
+
+        <div class="form-group">
+          <label>Aadhar Card Number *</label>
+          <input type="text" id="regAadhar" required pattern="[0-9]{12}" placeholder="12-digit Aadhar number">
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="regPhone" required pattern="[0-9]{10}" placeholder="10-digit mobile number">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label>Age *</label>
+          <input type="number" id="regAge" required min="1" max="120" placeholder="Your age">
+        </div>
+
+        <div class="form-group">
+          <label>Gender *</label>
+          <select id="regGender" required style="width: 100%; padding: 15px 20px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px;">
+            <option value="">Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Health Condition</label>
+          <select id="regHealth" style="width: 100%; padding: 15px 20px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px;">
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+            <option value="Poor">Poor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="regPassword" required placeholder="Create a password">
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 30px;">
+          <button type="submit" class="login-btn" style="flex: 1;">Create Account</button>
+          <button type="button" onclick="closeRegister()" style="flex: 1; background: #6c757d; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script>
+    // Initialize with demo user data
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeDemoUsers();
+    });
+
+    function initializeDemoUsers() {
+      // Check if demo users exist, if not create them
+      const users = window.AarogyaDB.getAll('users');
+      const raviExists = users.find(user => user.userId === 'ravi123');
+      
+      if (!raviExists) {
+        // Create Ravi's account
+        window.AarogyaDB.create('users', {
+          name: "Ravi Raj Choudhary",
+          userId: "ravi123",
+          aadhar: "XXXX-XXXX-XXXX",
+          phone: "1800-XXX-XXXX",
+          email: "ravi.choudhary@email.com",
+          age: 25,
+          gender: "Male",
+          healthCondition: "Fittest",
+          password: "ravi123",
+          accountType: "patient",
+          status: "active"
+        });
+
+        // Create some sample lab reports for Ravi
+        window.AarogyaDB.create('labReports', {
+          userId: "ravi123",
+          patientName: "Ravi Raj Choudhary",
+          testType: "Complete Blood Count (CBC)",
+          date: "2025-11-05",
+          result: "Normal",
+          status: "Completed",
+          doctorName: "Dr. Sneha Reddy",
+          reportFile: "cbc_report_ravi.pdf",
+          findings: "All parameters within normal range",
+          recommendations: "Continue healthy lifestyle"
+        });
+
+        window.AarogyaDB.create('labReports', {
+          userId: "ravi123",
+          patientName: "Ravi Raj Choudhary",
+          testType: "Lipid Profile",
+          date: "2025-11-01",
+          result: "Excellent",
+          status: "Completed",
+          doctorName: "Dr. Rajesh Kumar",
+          reportFile: "lipid_profile_ravi.pdf",
+          findings: "Cholesterol levels optimal",
+          recommendations: "Maintain current diet and exercise"
+        });
+
+        console.log('✅ Demo user Ravi Raj Choudhary created successfully!');
+      }
+
+      // Create guest user if doesn't exist
+      const guestExists = users.find(user => user.userId === 'guest');
+      if (!guestExists) {
+        window.AarogyaDB.create('users', {
+          name: "Guest User",
+          userId: "guest",
+          aadhar: "XXXX-XXXX-XXXX",
+          phone: "1800-XXX-XXXX",
+          email: "guest@aarogya.com",
+          age: 30,
+          gender: "Other",
+          healthCondition: "Good",
+          password: "guest123",
+          accountType: "patient",
+          status: "active"
+        });
+      }
+    }
+
+    function quickLogin(userId) {
+      document.getElementById('userId').value = userId;
+      document.getElementById('password').value = userId === 'ravi123' ? 'ravi123' : 'guest123';
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const userId = document.getElementById('userId').value;
+      const password = document.getElementById('password').value;
+
+      // Find user in database
+      const users = window.AarogyaDB.getAll('users');
+      const user = users.find(u => u.userId === userId && u.password === password);
+
+      if (user) {
+        // Store login session
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Redirect to patient portal
+        alert(`✅ Welcome back, ${user.name}!`);
+        window.location.href = 'patient-portal.html';
+      } else {
+        alert('❌ Invalid User ID or Password!');
+      }
+    }
+
+    function showRegister() {
+      document.getElementById('registerModal').style.display = 'flex';
+    }
+
+    function closeRegister() {
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('registerForm').reset();
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+
+      const userData = {
+        name: document.getElementById('regName').value,
+        userId: document.getElementById('regUserId').value,
+        aadhar: document.getElementById('regAadhar').value,
+        phone: document.getElementById('regPhone').value,
+        email: document.getElementById('regEmail').value,
+        age: parseInt(document.getElementById('regAge').value),
+        gender: document.getElementById('regGender').value,
+        healthCondition: document.getElementById('regHealth').value || 'Good',
+        password: document.getElementById('regPassword').value,
+        accountType: 'patient',
+        status: 'active'
+      };
+
+      // Check if user ID already exists
+      const users = window.AarogyaDB.getAll('users');
+      const existingUser = users.find(u => u.userId === userData.userId);
+
+      if (existingUser) {
+        alert('❌ User ID already exists! Please choose a different ID.');
+        return;
+      }
+
+      // Check if Aadhar already exists
+      const existingAadhar = users.find(u => u.aadhar === userData.aadhar);
+      if (existingAadhar) {
+        alert('❌ Aadhar number already registered!');
+        return;
+      }
+
+      // Create new user
+      const result = window.AarogyaDB.create('users', userData);
+
+      if (result.success) {
+        alert('✅ Account created successfully! You can now login.');
+        closeRegister();
+        
+        // Auto-fill login form
+        document.getElementById('userId').value = userData.userId;
+        document.getElementById('password').value = userData.password;
+      } else {
+        alert('❌ Error creating account: ' + result.error);
+      }
+    }
+
+    // Close modal on outside click
+    document.getElementById('registerModal')?.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeRegister();
+      }
+    });
+  </script>
+</body>
+</html>
